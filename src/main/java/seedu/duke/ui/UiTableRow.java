@@ -10,9 +10,9 @@ public class UiTableRow {
 
     public UiTableRow(Equipment equipment) {
         this(equipment.getName(),
-                "Total: "+equipment.getQuantity(),
-                "Available: "+equipment.getAvailable(),
-                "Loaned: "+equipment.getLoaned());
+                "Total: " + equipment.getQuantity(),
+                "Available: " + equipment.getAvailable(),
+                "Loaned: " + equipment.getLoaned());
     }
 
     public UiTableRow(ArrayList<String> columns) {
