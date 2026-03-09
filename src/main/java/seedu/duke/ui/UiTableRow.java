@@ -10,7 +10,7 @@ public class UiTableRow {
         this.columns = columns;
     }
 
-    public UiTableRow(String[] columns) {
+    public UiTableRow(String... columns) {
         this.columns = new ArrayList<>();
         this.columns.addAll(Arrays.asList(columns));
     }
