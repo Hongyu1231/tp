@@ -54,4 +54,11 @@ public class UiTableTest {
         assertTrue(finalString.contains("14.  STM32 Development Board | Total: 50 | Available: 45 | Loaned: 5"));
         assertTrue(finalString.contains("100. STM32 Development Board | Total: 50 | Available: 45 | Loaned: 5"));
     }
+
+    @Test
+    public void uiTableTestEmpty() {
+        UiTable uiTable = new UiTable();
+        String expectedOutput = "<empty table>";
+        assertEquals(expectedOutput, uiTable.toString());
+    }
 }

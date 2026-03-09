@@ -48,6 +48,11 @@ public class UiTable {
 
     @Override
     public String toString() {
+
+        if(rows.isEmpty()){
+            return "<empty table>";
+        }
+
         int indexLength = ("" + getRowCount()).length();
 
         var widths = IntStream.range(0, getColumnCount()).map(this::getColumnWidth).toArray();
