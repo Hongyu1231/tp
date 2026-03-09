@@ -1,10 +1,19 @@
 package seedu.duke.ui;
 
+import seedu.duke.equipment.Equipment;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class UiTableRow {
     private ArrayList<String> columns;
+
+    public UiTableRow(Equipment equipment) {
+        this(equipment.getName(),
+                "Total: "+equipment.getQuantity(),
+                "Available: "+equipment.getAvailable(),
+                "Loaned: "+equipment.getLoaned());
+    }
 
     public UiTableRow(ArrayList<String> columns) {
         this.columns = columns;
