@@ -83,28 +83,25 @@ public class Storage {
      * @return An Equipment object, or null if the string format is corrupted.
      */
     private Equipment parseEquipment(String line) {
-        // Expected format: Name | Quantity | Available | Loaned
-        // Example line: STM32 Development Board | 45 | 5 | 30
+        // Expected format: Name | Total | Available | Loaned
         String[] parts = line.split(" \\| ");
 
-        // Stretch goal: Handle corrupted data
-        if (parts.length < 3) {
+        // We expect exactly 4 parts now
+        if (parts.length < 4) {
             return null;
         }
 
         try {
             String name = parts[0];
-            int availableQuantity = Integer.parseInt(parts[1]);
-            int loanedQuantity = Integer.parseInt(parts[2]);
+            int totalQuantity = Integer.parseInt(parts[1]);
+            int availableQuantity = Integer.parseInt(parts[2]);
+            int loanedQuantity = Integer.parseInt(parts[3]);
 
-            // Create the equipment (assuming your constructor takes name and TOTAL quantity)
-            int totalQuantity = availableQuantity + loanedQuantity;
-            Equipment equipment = new Equipment(name, totalQuantity, availableQuantity, loanedQuantity);
-
-            return equipment;
+            // Use the 4-argument constructor to perfectly restore the data
+            return new Equipment(name, totalQuantity, availableQuantity, loanedQuantity);
 
         } catch (NumberFormatException e) {
-            // If the quantities in the text file are not valid numbers, ignore the line
+            // Ignore corrupted lines
             return null;
         }
     }
