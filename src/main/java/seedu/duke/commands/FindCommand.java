@@ -23,6 +23,23 @@ public class FindCommand extends Command {
     }
 
     /**
+     * Extracts the core logic of finding matching equipment so it can be tested easily.
+     * * @param equipments The current list of equipment to search through.
+     * @return An ArrayList containing only the equipment that matches the keyword.
+     */
+    public ArrayList<Equipment> getMatchingEquipments(EquipmentList equipments) {
+        ArrayList<Equipment> matchingEquipments = new ArrayList<>();
+
+        for (int i = 0; i < equipments.getSize(); i++) {
+            Equipment eq = equipments.getEquipment(i);
+            if (eq.getName().toLowerCase().contains(this.keyword.toLowerCase())) {
+                matchingEquipments.add(eq);
+            }
+        }
+        return matchingEquipments;
+    }
+
+    /**
      * Iterates through the equipment list to find matches and displays them.
      * @param equipments The current list of equipment to search through.
      * @param ui         The user interface to handle printing the results.
@@ -35,15 +52,7 @@ public class FindCommand extends Command {
             return;
         }
 
-        ArrayList<Equipment> matchingEquipments = new ArrayList<>();
-
-        // Iterate through the whole list to find if each equipment contains the keyword
-        for (int i = 0; i < equipments.getSize(); i++) {
-            Equipment eq = equipments.getEquipment(i);
-            if (eq.getName().toLowerCase().contains(keyword.toLowerCase())) {
-                matchingEquipments.add(eq);
-            }
-        }
+        ArrayList<Equipment> matchingEquipments = getMatchingEquipments(equipments);
 
         if (matchingEquipments.isEmpty()) {
             ui.showMessage("There is no matching equipment in your list.");
