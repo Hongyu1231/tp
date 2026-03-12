@@ -1,7 +1,6 @@
 package seedu.EquipmentMaster.storage;
 
 import seedu.EquipmentMaster.equipment.Equipment;
-import seedu.EquipmentMaster.exception.EquipmentMasterException;
 import seedu.EquipmentMaster.ui.Ui;
 
 import java.io.File;
