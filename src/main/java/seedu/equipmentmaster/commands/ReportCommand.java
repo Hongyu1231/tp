@@ -77,7 +77,8 @@ public class ReportCommand extends Command {
             double age = purchaseSem.calculateAgeInYears(targetSem);
             if (age >= lifespan) {
                 foundAging = true;
-                String msg = String.format("%d. %s (Qty: %d, Bought: %s) | Age: %.1f Years | Status: [REPLACE SOON]", (i + 1), eq.getName(), eq.getQuantity(), purchaseSem, age);
+                String msg = String.format("%d. %s (Qty: %d, Bought: %s) | Age: %.1f Years | Status: [REPLACE SOON]",
+                        (i + 1), eq.getName(), eq.getQuantity(), purchaseSem, age);
                 ui.showMessage(msg);
             }
 

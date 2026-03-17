@@ -72,7 +72,8 @@ public class Equipment {
      * @param purchaseSem The academic semester when the equipment was purchased.
      * @param lifespanYears The expected lifespan in years.
      */
-    public Equipment(String name, int quantity, int available, int loaned, AcademicSemester purchaseSem, double lifespanYears) {
+    public Equipment(String name, int quantity, int available, int loaned,
+                     AcademicSemester purchaseSem, double lifespanYears) {
         this.name = name;
         this.quantity = quantity;
         this.available = available;

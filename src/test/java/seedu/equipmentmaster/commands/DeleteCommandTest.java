@@ -12,19 +12,23 @@ import seedu.equipmentmaster.exception.EquipmentMasterException;
 
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 /**
  * Tests the functionality of the DeleteCommand.
  */
 public class DeleteCommandTest {
     private static final String TEST_FILE_PATH = "test_equipment.txt";
-    private EquipmentList equipments;
-    private Ui ui;
-    private Storage storage;
 
     @TempDir
     Path tempDir;
+
+    private EquipmentList equipments;
+    private Ui ui;
+    private Storage storage;
 
     @BeforeEach
     public void setUp() {

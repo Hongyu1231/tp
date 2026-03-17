@@ -125,13 +125,15 @@ public class DeleteCommand extends Command {
         if (status.equals("available")) {
             int currentAvailable = target.getAvailable();
             if (quantity > currentAvailable) {
-                throw new EquipmentMasterException("Only " + currentAvailable + " available unit(s). Cannot delete " + quantity + ".");
+                throw new EquipmentMasterException("Only " + currentAvailable +
+                        " available unit(s). Cannot delete " + quantity + ".");
             }
             target.setAvailable(currentAvailable - quantity);
         } else if (status.equals("loaned")) {
             int currentLoaned = target.getLoaned();
             if (quantity > currentLoaned) {
-                throw new EquipmentMasterException("Only " + currentLoaned + " loaned unit(s). Cannot delete " + quantity + ".");
+                throw new EquipmentMasterException("Only " + currentLoaned +
+                        " loaned unit(s). Cannot delete " + quantity + ".");
             }
             target.setLoaned(currentLoaned - quantity);
         }
