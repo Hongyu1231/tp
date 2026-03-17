@@ -48,12 +48,12 @@ public class AddCommand extends Command{
      * @param fullCommand The complete input string containing the 'add' command and its arguments.
      * @return An AddCommand object containing the parsed equipment name and quantity.
      * @throws EquipmentMasterException If the format is incorrect, quantity is missing/invalid, or negative.
-
      */
     public static AddCommand parse(String fullCommand) throws EquipmentMasterException {
         logger.log(Level.INFO, "Starting to parse add command input.");
 
-        if (!fullCommand.contains("n/") || (!fullCommand.contains("q/")) || (!fullCommand.contains("bought/") || (!fullCommand.contains("life/")))) {
+        if (!fullCommand.contains("n/") || (!fullCommand.contains("q/")) ||
+                (!fullCommand.contains("bought/") || (!fullCommand.contains("life/")))) {
             logger.log(Level.WARNING, "Missing compulsory flags (n/ or q/) in user input.");
             throw new EquipmentMasterException(MESSAGE_INVALID_ADD_FORMAT);
         }
@@ -109,7 +109,9 @@ public class AddCommand extends Command{
         Equipment equipment = new Equipment(name, quantity, quantity, 0, purchaseSem, lifespanYears);
         equipments.addEquipment(equipment);
         storage.save(equipments.getAllEquipments());
-        ui.showMessage("Added " + quantity + " of " + name + ". (Total Available: " + equipment.getAvailable() + ") Purchase: "
-                + purchaseSem.toString() + " | Lifespan: " + lifespanYears + (lifespanYears == 1.0 ? " year" : " years") + ")");
+        ui.showMessage("Added " + quantity + " of " + name + ". (Total Available: "
+                + equipment.getAvailable() + ") Purchase: "
+                + purchaseSem.toString() + " | Lifespan: " +
+                lifespanYears + (lifespanYears == 1.0 ? " year" : " years") + ")");
     }
 }

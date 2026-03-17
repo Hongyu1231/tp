@@ -195,7 +195,8 @@ public class Equipment {
      */
     @Override
     public String toString() {
-        return name + " | Total: " + quantity + " | Available: " + available + " | loaned: " + loaned + " | Purchase: " + purchaseSem + " | Lifespan: " + lifespanYears;
+        return name + " | Total: " + quantity + " | Available: " + available +
+                " | loaned: " + loaned + " | Purchase: " + purchaseSem + " | Lifespan: " + lifespanYears;
     }
 
     /**
@@ -204,6 +205,7 @@ public class Equipment {
      * @return Equipment data formatted for saving to file.
      */
     public String toFileString() {
-        return this.name + " | " + this.quantity + " | " + this.available + " | " + this.loaned + " | " + this.purchaseSem.toString() + " | " + this.lifespanYears;
+        return this.name + " | " + this.quantity + " | " + this.available +
+                " | " + this.loaned + " | " + this.purchaseSem.toString() + " | " + this.lifespanYears;
     }
 }

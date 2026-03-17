@@ -4,7 +4,6 @@ import seedu.equipmentmaster.equipment.Equipment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Represents a row in the UiTable.
