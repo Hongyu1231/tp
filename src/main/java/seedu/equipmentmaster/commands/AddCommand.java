@@ -1,6 +1,7 @@
 package seedu.equipmentmaster.commands;
 
 
+import jdk.internal.logger.BootstrapLogger;
 import seedu.equipmentmaster.equipment.Equipment;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
@@ -8,7 +9,11 @@ import seedu.equipmentmaster.semester.AcademicSemester;
 import seedu.equipmentmaster.storage.Storage;
 import seedu.equipmentmaster.ui.Ui;
 
+import static seedu.equipmentmaster.EquipmentMaster.logger;
 import static seedu.equipmentmaster.common.Messages.MESSAGE_INVALID_ADD_FORMAT;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Represents a command that adds new equipment to the equipment list.
@@ -17,6 +22,8 @@ import static seedu.equipmentmaster.common.Messages.MESSAGE_INVALID_ADD_FORMAT;
  * list to storage, and displays a confirmation message to the user.
  */
 public class AddCommand extends Command{
+    private static final Logger logger = Logger.getLogger(AddCommand.class.getName());
+
     private final String name;
     private final int quantity;
     private final AcademicSemester purchaseSem;
@@ -41,9 +48,13 @@ public class AddCommand extends Command{
      * @param fullCommand The complete input string containing the 'add' command and its arguments.
      * @return An AddCommand object containing the parsed equipment name and quantity.
      * @throws EquipmentMasterException If the format is incorrect, quantity is missing/invalid, or negative.
+
      */
     public static AddCommand parse(String fullCommand) throws EquipmentMasterException {
-        if (!fullCommand.contains("n/") || (!fullCommand.contains("q/"))) {
+        logger.log(Level.INFO, "Starting to parse add command input.");
+
+        if (!fullCommand.contains("n/") || (!fullCommand.contains("q/")) || (!fullCommand.contains("bought/") || (!fullCommand.contains("life/")))) {
+            logger.log(Level.WARNING, "Missing compulsory flags (n/ or q/) in user input.");
             throw new EquipmentMasterException(MESSAGE_INVALID_ADD_FORMAT);
         }
         int nameIndex = fullCommand.indexOf("n/");
@@ -55,23 +66,31 @@ public class AddCommand extends Command{
         String purchaseSemStr = "";
         String lifespanYearsStr = "";
         if (nameIndex < quantityIndex) {
-            name = fullCommand.substring(nameIndex + 2, quantityIndex - 1);
-            qtString = fullCommand.substring(quantityIndex + 2, purchaseSemIndex - 1);
+            name = fullCommand.substring(nameIndex + 2, quantityIndex - 1).trim();
+            qtString = fullCommand.substring(quantityIndex + 2, purchaseSemIndex - 1).trim();
         } else {
-            qtString = fullCommand.substring(quantityIndex + 2, nameIndex - 1);
-            name = fullCommand.substring(nameIndex + 2, purchaseSemIndex - 1);
+            qtString = fullCommand.substring(quantityIndex + 2, nameIndex - 1).trim();
+            name = fullCommand.substring(nameIndex + 2, purchaseSemIndex - 1).trim();
         }
         purchaseSemStr = fullCommand.substring(purchaseSemIndex + 7, lifespanYearsIndex - 1);
         lifespanYearsStr = fullCommand.substring(lifespanYearsIndex + 5);
+        if (name.isEmpty() || qtString.isEmpty() || purchaseSemStr.isEmpty() || lifespanYearsStr.isEmpty()) {
+            logger.log(Level.WARNING, "One or more parsed fields are empty.");
+            throw new EquipmentMasterException(MESSAGE_INVALID_ADD_FORMAT);
+        }
         try {
             int quantity = Integer.parseInt(qtString);
-            if (quantity < 0) {
-                throw new EquipmentMasterException("Equipment quantity cannot be negative.");
+            if (quantity <= 0) {
+                logger.log(Level.WARNING, "Parsed quantity is zero or negative: " + quantity);
+                throw new EquipmentMasterException("Equipment quantity must be positive.");
             }
             AcademicSemester purchaseSem = new AcademicSemester(purchaseSemStr.trim());
             double lifespanYear = Double.parseDouble(lifespanYearsStr.trim());
+
+            logger.log(Level.INFO, "Successfully parsed AddCommand for equipment: " + name);
             return new AddCommand(name, quantity, purchaseSem, lifespanYear);
         } catch (NumberFormatException e) {
+            logger.log(Level.WARNING, "Failed to parse numeric fields.", e);
             throw new EquipmentMasterException("Please enter a valid whole number for quantity");
         }
     }
