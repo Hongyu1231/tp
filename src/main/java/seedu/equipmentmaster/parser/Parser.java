@@ -8,6 +8,11 @@ import java.util.ArrayList;
 
 import static seedu.equipmentmaster.common.Messages.MESSAGE_INVALID_INPUT;
 
+/**
+ * Parses user input into specific commands for the EquipmentMaster application.
+ * Matches input strings against a registry of known command specifications.
+ *
+ */
 public class Parser {
 
     private static ArrayList<CommandSpec> commandSpecs = new ArrayList<>();
@@ -24,6 +29,11 @@ public class Parser {
         commandSpecs.add(new CommandSpec("help","help", fullCommand -> new HelpCommand()));
     }
 
+    /**
+     * Retrieves the list of all available command specifications.
+     *
+     * @return The list of registered CommandSpec objects.
+     */
     public static ArrayList<CommandSpec> getCommandSpecs() {
         return commandSpecs;
     }
@@ -47,15 +57,28 @@ public class Parser {
         throw new EquipmentMasterException(MESSAGE_INVALID_INPUT);
     }
 
+    /**
+     * Functional interface for creating Command objects from a string.
+     */
     public interface CommandFactory {
         Command parse(String fullCommand) throws EquipmentMasterException;
     }
 
+    /**
+     * Represents the specification of a command, including its keyword, format, and creation logic.
+     */
     public static class CommandSpec{
         private String keyword;
         private String format;
         private CommandFactory creator;
 
+        /**
+         * Constructs a new CommandSpec.
+         *
+         * @param keyword The keyword used to invoke the command (e.g., "add", "list").
+         * @param format  The usage format string explaining how to use the command.
+         * @param creator The factory to create the command instance.
+         */
         public CommandSpec(String keyword, String format, CommandFactory creator) {
             this.keyword = keyword;
             this.format = format;
