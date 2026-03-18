@@ -28,12 +28,11 @@ public class Equipment {
     }
 
     /**
-     * Creates Equipment with full details.
-     *
+     * Constructs an Equipment object with initial available and loaned quantity.
      * @param name Name of the equipment.
-     * @param quantity Total quantity of the equipment.
-     * @param available Number of available items.
-     * @param loaned Number of loaned items.
+     * @param quantity Initial total quantity.
+     * @param available Initial available quantity
+     * @param loaned Initial loaned quantity
      */
     public Equipment(String name, int quantity, int available, int loaned) {
         this.name = name;
@@ -117,7 +116,6 @@ public class Equipment {
     public int getLoaned() {
         return loaned;
     }
-
     /**
      * Updates the number of available equipment items.
      *
@@ -197,7 +195,8 @@ public class Equipment {
      */
     @Override
     public String toString() {
-        return name + " | Total: " + quantity + " | Available: " + available + " | loaned: " + loaned;
+        return name + " | Total: " + quantity + " | Available: " + available +
+                " | loaned: " + loaned + " | Purchase: " + purchaseSem + " | Lifespan: " + lifespanYears;
     }
 
     /**
@@ -206,6 +205,11 @@ public class Equipment {
      * @return Equipment data formatted for saving to file.
      */
     public String toFileString() {
-        return this.name + " | " + this.quantity + " | " + this.available + " | " + this.loaned;
+        if (this.purchaseSem == null) {
+            // Legacy format without lifecycle data (purchase semester and lifespan).
+            return this.name + " | " + this.quantity + " | " + this.available + " | " + this.loaned;
+        }
+        return this.name + " | " + this.quantity + " | " + this.available
+                + " | " + this.loaned + " | " + this.purchaseSem.toString() + " | " + this.lifespanYears;
     }
 }

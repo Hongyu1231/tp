@@ -24,7 +24,15 @@ public class UiTableRow {
         this(equipment.getName(),
                 "Total: " + equipment.getQuantity(),
                 "Available: " + equipment.getAvailable(),
-                "Loaned: " + equipment.getLoaned());
+                "Loaned: " + equipment.getLoaned(),
+                equipment.getPurchaseSem() == null
+                        ? "Purchase: <N/A>"
+                        : "Purchase: " + equipment.getPurchaseSem(),
+                equipment.getLifespanYears() <= 0.0
+                        ? "Life: <N/A>"
+                        : "Life: " + equipment.getLifespanYears()
+                        + (equipment.getLifespanYears() == 1.0 ? " year" : " years")
+        );
     }
 
     /**
