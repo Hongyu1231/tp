@@ -8,3 +8,4 @@ find FPGA
 find ee2026
 find EE2026
 find CG2028
+bye
