@@ -31,7 +31,7 @@ public class UiTableRow {
                 : "Purchase: " + equipment.getPurchaseSem());
         columns.add(equipment.getLifespanYears() <= 0.0
                 ? "Life: <N/A>"
-                : "Life: " + equipment.getLifespanYears()
+                : "Lifespan: " + equipment.getLifespanYears()
                 + (equipment.getLifespanYears() == 1.0 ? " year" : " years"));
         if (equipment.getModuleCodes() != null && !equipment.getModuleCodes().isEmpty()) {
             columns.add("Modules: " + equipment.getModuleCodes());
