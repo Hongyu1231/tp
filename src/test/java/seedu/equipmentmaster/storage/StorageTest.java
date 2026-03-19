@@ -53,8 +53,10 @@ public class StorageTest {
         AcademicSemester sem2 = new AcademicSemester("AY2025/26 Sem2");
 
         // Using your newly created 6-argument constructor!
-        originalList.add(new Equipment("STM32 Board", 50, 45, 5, sem1, 5.0));
-        originalList.add(new Equipment("HDMI Cable", 100, 100, 0, sem2, 2.5));
+        originalList.add(new Equipment("STM32 Board", 50, 45, 5, sem1, 5.0,
+                0));
+        originalList.add(new Equipment("HDMI Cable", 100, 100, 0, sem2, 2.5,
+                0));
 
         // Act: Save the list to the text file, then immediately load it back
         storage.save(originalList);
@@ -90,7 +92,7 @@ public class StorageTest {
         Path testFile = tempDir.resolve("test.txt");
         Storage storage = new Storage(testFile.toString(), new Ui());
 
-        String trickyLine = "Special | Adapter | 50 | 45 | 5 | AY2025/26 Sem1 | 3.5 | ";
+        String trickyLine = "Special | Adapter | 50 | 45 | 5 | 0 | AY2025/26 Sem1 | 3.5 | ";
 
         try (FileWriter writer = new FileWriter(testFile.toFile())) {
             writer.write(trickyLine + System.lineSeparator());

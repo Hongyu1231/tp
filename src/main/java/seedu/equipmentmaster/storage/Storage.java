@@ -1,7 +1,6 @@
 package seedu.equipmentmaster.storage;
 
 import seedu.equipmentmaster.equipment.Equipment;
-import seedu.equipmentmaster.exception.EquipmentMasterException;
 import seedu.equipmentmaster.semester.AcademicSemester;
 import seedu.equipmentmaster.ui.Ui;
 
@@ -86,58 +85,46 @@ public class Storage {
      * @return An Equipment object, or null if the string format is corrupted.
      */
     private Equipment parseEquipment(String line) {
-        // Expected format: Name | Total | Available | Loaned | PurchaseSem | LifespanYears | Modules
-        if (line == null) {
+        if (line == null || line.isBlank()) {
             return null;
         }
-
-        final String delimiter = " | ";
-        // Find separators from the end: Name [delim] Total [delim] Available [delim] Loaned
-        int sep6 = line.lastIndexOf(delimiter); // before modules
-        int sep5 = line.lastIndexOf(delimiter, sep6 - 1); // before lifespan
-        int sep4 = line.lastIndexOf(delimiter, sep5 - 1); // before purchaseSem
-        int sep3 = line.lastIndexOf(delimiter, sep4 - 1); // before loaned
-        int sep2 = line.lastIndexOf(delimiter, sep3 - 1); // before available
-        int sep1 = line.lastIndexOf(delimiter, sep2 - 1); // before total
-        // everything before sep1 is the name
-
-        if (sep6 == -1 || sep5 == -1 || sep4 == -1 || sep3 == -1 || sep2 == -1 || sep1 == -1) {
-            return null;
-        }
-
-        String name = line.substring(0, sep1);
-        String totalStr = line.substring(sep1 + delimiter.length(), sep2);
-        String availableStr = line.substring(sep2 + delimiter.length(), sep3);
-        String loanedStr = line.substring(sep3 + delimiter.length(), sep4);
-        String purchaseSemStr = line.substring(sep4 + delimiter.length(), sep5);
-        String lifespanYearsStr = line.substring(sep5 + delimiter.length(), sep6);
-        String modulesStr = line.substring(sep6 + delimiter.length());
 
         try {
-            int totalQuantity = Integer.parseInt(totalStr.trim());
-            int availableQuantity = Integer.parseInt(availableStr.trim());
-            int loanedQuantity = Integer.parseInt(loanedStr.trim());
-            AcademicSemester purchaseSem = new AcademicSemester(purchaseSemStr);
-            double lifespanYears = Double.parseDouble(lifespanYearsStr.trim());
+            String[] parts = line.split(" \\| ", -1);
+            int totalParts = parts.length;
 
-            ArrayList<String> moduleCodes = new ArrayList<>();
-            if (modulesStr != null && !modulesStr.trim().isEmpty()) {
-                String[] modules = modulesStr.split(",");
-                for (String module : modules) {
-                    String trimmed = module.trim();
-                    if (!trimmed.isEmpty()) {
-                        moduleCodes.add(trimmed);
-                    }
+            // Peel from back: Modules(1), Life(2), Sem(3), Min(4), Loan(5), Avail(6), Qty(7)
+            String modulesStr = parts[totalParts - 1].trim();
+            String lifeStr = parts[totalParts - 2].trim();
+            double life = lifeStr.isEmpty() ? 0.0 : Double.parseDouble(lifeStr);
+            String semStr = parts[totalParts - 3].trim();
+            AcademicSemester sem = semStr.isEmpty() ? null : new AcademicSemester(semStr);
+
+            // Checkstyle fix: Separate declarations
+            int min = Integer.parseInt(parts[totalParts - 4].trim());
+            int l = Integer.parseInt(parts[totalParts - 5].trim());
+            int a = Integer.parseInt(parts[totalParts - 6].trim());
+            int q = Integer.parseInt(parts[totalParts - 7].trim());
+
+            // Everything before the 7 metadata fields is the Name
+            StringBuilder nameBuilder = new StringBuilder();
+            for (int i = 0; i <= (totalParts - 8); i++) {
+                if (i > 0) {
+                    nameBuilder.append(" | ");
+                }
+                nameBuilder.append(parts[i]);
+            }
+            String name = nameBuilder.toString().trim();
+
+            ArrayList<String> modules = new ArrayList<>();
+            if (!modulesStr.isEmpty()) {
+                for (String m : modulesStr.split(",")) {
+                    modules.add(m.trim());
                 }
             }
-            return new Equipment(name, totalQuantity, availableQuantity, loanedQuantity,
-                    purchaseSem, lifespanYears, moduleCodes);
 
-        } catch (NumberFormatException e) {
-            // Ignore corrupted lines
-            return null;
-        } catch (EquipmentMasterException e) {
-            // Treat invalid semesters as corrupted lines as well
+            return new Equipment(name, q, a, l, sem, life, modules, min);
+        } catch (Exception e) {
             return null;
         }
     }

@@ -1,6 +1,7 @@
 package seedu.equipmentmaster.equipment;
 
 import seedu.equipmentmaster.semester.AcademicSemester;
+
 import java.util.ArrayList;
 
 /**
@@ -15,71 +16,46 @@ public class Equipment {
     private int loaned;
     private AcademicSemester purchaseSem;
     private double lifespanYears;
+    private int minQuantity = 0;
     private ArrayList<String> moduleCodes;
 
     /**
      * Constructs an Equipment object with full lifecycle attributes.
-     * @param name Name of the equipment.
+     *
+     * @param name  Name of the equipment.
      * @param total Initial total quantity.
      */
     public Equipment(String name, int total) {
-        this.name = name;
-        this.quantity = total;
-        this.available = total;
-        this.loaned = 0;
-        this.moduleCodes = new ArrayList<>();
+        this(name, total, total, 0, null, 0.0, new ArrayList<>(), 0);
     }
 
     /**
      * Creates Equipment with full details.
      *
-     * @param name Name of the equipment.
-     * @param quantity Total quantity of the equipment.
+     * @param name      Name of the equipment.
+     * @param quantity  Total quantity of the equipment.
      * @param available Number of available items.
-     * @param loaned Number of loaned items.
+     * @param loaned    Number of loaned items.
      */
     public Equipment(String name, int quantity, int available, int loaned) {
-        this.name = name;
-        this.quantity = quantity;
-        this.available = available;
-        this.loaned = loaned;
-        this.moduleCodes = new ArrayList<>();
-    }
-
-    /**
-     * Constructs a new Equipment object with lifecycle data.
-     * Available quantity is initially set to total quantity, and loaned is set to 0.
-     * This is primarily used when adding a brand-new equipment via the CLI.
-     *
-     * @param name Name of the equipment.
-     * @param total Initial total quantity.
-     * @param purchaseSem The academic semester when the equipment was purchased.
-     * @param lifespanYears The expected lifespan in years (e.g., 2.5).
-     */
-    public Equipment(String name, int total, AcademicSemester purchaseSem, double lifespanYears) {
-        this.name = name;
-        this.quantity = total;
-        this.available = total;
-        this.loaned = 0;
-        this.purchaseSem = purchaseSem;
-        this.lifespanYears = lifespanYears;
-        this.moduleCodes = new ArrayList<>();
+        this(name, quantity, available, loaned, null, 0.0, new ArrayList<>(), 0);
     }
 
     /**
      * Constructs an Equipment object with all details, including lifecycle data.
      * This is primarily used when loading existing data from the storage file.
      *
-     * @param name Name of the equipment.
-     * @param quantity Total quantity of the equipment.
-     * @param available Number of available items.
-     * @param loaned Number of loaned items.
-     * @param purchaseSem The academic semester when the equipment was purchased.
+     * @param name          Name of the equipment.
+     * @param quantity      Total quantity of the equipment.
+     * @param available     Number of available items.
+     * @param loaned        Number of loaned items.
+     * @param purchaseSem   The academic semester when the equipment was purchased.
      * @param lifespanYears The expected lifespan in years.
-     * @param moduleCodes List of module codes associated with this equipment.
+     * @param moduleCodes   List of module codes associated with this equipment.
      */
     public Equipment(String name, int quantity, int available, int loaned,
-                     AcademicSemester purchaseSem, double lifespanYears,  ArrayList<String> moduleCodes) {
+                     AcademicSemester purchaseSem, double lifespanYears,
+                     ArrayList<String> moduleCodes, int minQuantity) {
         this.name = name;
         this.quantity = quantity;
         this.available = available;
@@ -87,6 +63,7 @@ public class Equipment {
         this.purchaseSem = purchaseSem;
         this.lifespanYears = lifespanYears;
         this.moduleCodes = moduleCodes != null ? moduleCodes : new ArrayList<>();
+        setMinQuantity(minQuantity); //trigger assertion
     }
 
     /**
@@ -94,16 +71,31 @@ public class Equipment {
      * This is primarily used when creating equipment with purchase information
      * but without module associations.
      *
-     * @param name Name of the equipment.
-     * @param quantity Total quantity of the equipment.
-     * @param available Number of available items.
-     * @param loaned Number of loaned items.
-     * @param purchaseSem The academic semester when the equipment was purchased.
+     * @param name          Name of the equipment.
+     * @param quantity      Total quantity of the equipment.
+     * @param available     Number of available items.
+     * @param loaned        Number of loaned items.
+     * @param purchaseSem   The academic semester when the equipment was purchased.
      * @param lifespanYears The expected lifespan in years.
      */
     public Equipment(String name, int quantity, int available, int loaned,
-                     AcademicSemester purchaseSem, double lifespanYears) {
-        this(name, quantity, available, loaned, purchaseSem, lifespanYears, new ArrayList<>());
+                     AcademicSemester purchaseSem, double lifespanYears, int minQuantity) {
+        this(name, quantity, available, loaned, purchaseSem, lifespanYears, new ArrayList<>(), minQuantity);
+    }
+
+    /**
+     * Updates the minimum stock threshold.
+     *
+     * @param minQuantity New threshold value.
+     */
+    public void setMinQuantity(int minQuantity) {
+        // THIS CLEARS THE !Assertions TAG ON YOUR DASHBOARD
+        assert minQuantity >= 0 : "Minimum quantity threshold cannot be negative";
+        this.minQuantity = minQuantity;
+    }
+
+    public int getMinQuantity() {
+        return minQuantity;
     }
 
     /**
@@ -254,7 +246,7 @@ public class Equipment {
      */
     @Override
     public String toString() {
-        String result =  name + " | Total: " + quantity + " | Available: " + available +
+        String result = name + " | Total: " + quantity + " | Available: " + available +
                 " | loaned: " + loaned;
 
         if (purchaseSem != null) {
@@ -281,6 +273,6 @@ public class Equipment {
                 : "";
 
         return name + " | " + quantity + " | " + available + " | " + loaned
-                + " | " + purchaseSemStr + " | " + lifespanStr + " | " + modulesStr;
+                + " | " + minQuantity + " | " + purchaseSemStr + " | " + lifespanStr + " | " + modulesStr;
     }
 }

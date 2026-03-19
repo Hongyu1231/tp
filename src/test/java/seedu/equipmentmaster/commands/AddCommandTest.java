@@ -53,7 +53,8 @@ public class AddCommandTest {
         double testLifespan = 5.5;
 
         // 2. Pass all 4 arguments into the AddCommand constructor
-        AddCommand command = new AddCommand("STM32", 5, testSem, testLifespan);
+        AddCommand command = new AddCommand("STM32", 5, testSem, testLifespan, 0,
+                new ArrayList<>());
 
         command.execute(equipments, ui, storage);
 
@@ -110,7 +111,7 @@ public class AddCommandTest {
         modules.add("EE2026");
         modules.add("CG2028");
 
-        AddCommand command = new AddCommand("FPGA", 40, testSem, testLifespan, modules);
+        AddCommand command = new AddCommand("FPGA", 40, testSem, testLifespan, 0, modules);
 
         // Act
         command.execute(equipments, ui, storage);
