@@ -35,6 +35,9 @@ public class SetMinCommand extends Command {
         try {
             String name = command.split(" n/")[1].split(" min/")[0].trim();
             int min = Integer.parseInt(command.split("min/")[1].trim());
+            if (min < 0) {
+                throw new EquipmentMasterException("Minimum threshold cannot be negative.");
+            }
             return new SetMinCommand(name, min);
         } catch (Exception e) {
             throw new EquipmentMasterException("Invalid format! Use: setmin n/NAME min/QUANTITY");
