@@ -189,17 +189,18 @@ public class Storage {
      * @throws EquipmentMasterException If an I/O error occurs while writing to the file.
      */
     public void saveModules(ModuleList moduleList) throws EquipmentMasterException {
-        try {
-            File file = new File(moduleFilePath);
-            file.getParentFile().mkdirs();
-            FileWriter fw = new FileWriter(file);
-
+        File file = new File(moduleFilePath);
+        File parentDirectory = file.getParentFile();
+        if (parentDirectory != null && !parentDirectory.exists()) {
+            parentDirectory.mkdirs();
+        }
+        try (FileWriter fw = new FileWriter(file)) {
             for (Module m : moduleList.getModules()) {
                 fw.write(m.getName() + " | " + m.getPax() + System.lineSeparator());
             }
-            fw.close();
         } catch (IOException e) {
-            throw new EquipmentMasterException("Error saving modules to file: " + moduleFilePath);
+            throw new EquipmentMasterException("Error saving modules to file: " + moduleFilePath
+                    + " - " + e.getMessage());
         }
     }
 
@@ -229,7 +230,7 @@ public class Storage {
 
             // Read and parse the data
             try (Scanner scanner = new Scanner(file);){
-                while (scanner.hasNext()) {
+                while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
 
                     if (line.trim().isEmpty()) {
@@ -242,21 +243,28 @@ public class Storage {
                         String name = parts[0].trim();
                         int pax = Integer.parseInt(parts[1].trim());
 
-                        // Add the reconstructed module to the list
-                        loadedList.addModule(new Module(name, pax));
+                        try {
+                            // Add the reconstructed module to the list
+                            loadedList.addModule(new Module(name, pax));
+                        } catch (EquipmentMasterException e) {
+                            ui.showMessage(e.getMessage());
+                        }
                     }
                 }
             }
 
         } catch (IOException e) {
             // Print the I/O error directly to the console instead of throwing an exception
-            System.out.println("Error creating a new module data file: " + e.getMessage());
+            ui.showMessage("Error creating a new module data file: " + e.getMessage());
+            // Return an empty list to adhere to the method contract on errors
+            return new ModuleList();
         } catch (NumberFormatException e) {
             // Print the parsing error directly to the console
-            System.out.println("Data corruption detected: Module pax is not a valid integer.");
+            ui.showMessage("Data corruption detected: Module pax is not a valid integer.");
+            // Return an empty list to adhere to the method contract on errors
+            return new ModuleList();
         }
-
-        // Return whatever was successfully loaded (even if it's empty due to an error)
+        // Return the fully loaded list when no errors have occurred
         return loadedList;
     }
 }

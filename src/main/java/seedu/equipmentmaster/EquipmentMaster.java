@@ -19,7 +19,7 @@ public class EquipmentMaster {
     private static final Logger logger = Logger.getLogger(EquipmentMaster.class.getName());
     private Ui ui;
     private EquipmentList equipments;
-    private ModuleList moduleLists;
+    private ModuleList moduleList;
 
     /**
      * Initializes the application, loads system settings, and populates the equipment list.
@@ -50,7 +50,7 @@ public class EquipmentMaster {
         this.equipments = new EquipmentList(storage.load());
         logger.log(Level.INFO, "System time loaded successfully.");
 
-        this.moduleLists = storage.loadModules();
+        this.moduleList = storage.loadModules();
 
         // Check loaded commands
         logger.log(Level.INFO, "Loaded "+Parser.getCommandSpecs().size()+" commands.");
@@ -83,7 +83,7 @@ public class EquipmentMaster {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
                 Command c = Parser.parse(fullCommand);
-                c.execute(equipments, moduleLists, ui, storage);
+                c.execute(equipments, moduleList, ui, storage);
                 isExit = c.isExit();
             } catch (EquipmentMasterException e) {
                 ui.showMessage(e.getMessage());

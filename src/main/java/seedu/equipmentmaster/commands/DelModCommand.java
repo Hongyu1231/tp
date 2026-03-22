@@ -39,13 +39,13 @@ public class DelModCommand extends Command {
         moduleList.deleteModule(moduleName);
 
         // 2. Print success message to the console.
-        System.out.println("Successfully deleted module: " + moduleName);
+        ui.showMessage("Successfully deleted module: " + moduleName);
 
         // 3. Save the updated list to the local text file.
         try {
             storage.saveModules(moduleList);
         } catch (EquipmentMasterException e) {
-            System.out.println(e.getMessage());
+            ui.showMessage(e.getMessage());
         }
     }
 

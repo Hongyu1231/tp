@@ -37,17 +37,18 @@ public class ListModCommand extends Command {
             throws EquipmentMasterException {
         // 1. Check if the module list is empty
         if (moduleList.getModules().isEmpty()) {
-            System.out.println("There are currently no modules tracked in the system.");
+
+            ui.showMessage("There are currently no modules tracked in the system.");
             return;
         }
 
         // 2. Print the header
-        System.out.println("Here are the current course modules in your system:");
+        ui.showMessage("Here are the current course modules in your system:");
 
         // 3. Iterate through the list and print each module with an index number
         int index = 1;
         for (Module m : moduleList.getModules()) {
-            System.out.println(index + ". " + m.toString());
+            ui.showMessage(index + ". " + m.toString());
             index++;
         }
     }

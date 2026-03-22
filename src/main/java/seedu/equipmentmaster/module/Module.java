@@ -1,5 +1,7 @@
 package seedu.equipmentmaster.module;
 
+import seedu.equipmentmaster.exception.EquipmentMasterException;
+
 /**
  * Represents a course module in the equipment management system.
  * Tracks the module's name and its associated student enrollment (pax).
@@ -13,8 +15,12 @@ public class Module {
      *
      * @param name The name of the module (e.g., "CG2111A").
      * @param pax  The number of students enrolled. Must be 0 or a positive integer.
+     * @throws EquipmentMasterException If the provided pax is negative.
      */
-    public Module(String name, int pax) {
+    public Module(String name, int pax) throws EquipmentMasterException {
+        if (pax < 0) {
+            throw new EquipmentMasterException("Pax (enrollment number) cannot be negative.");
+        }
         this.name = name;
         this.pax = pax;
     }

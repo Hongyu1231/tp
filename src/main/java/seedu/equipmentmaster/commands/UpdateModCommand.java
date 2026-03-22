@@ -44,14 +44,14 @@ public class UpdateModCommand extends Command {
         moduleList.updateModule(moduleName, newPax);
 
         // 2. Print success message to the console.
-        System.out.println("Successfully updated module:");
-        System.out.println(moduleName + " | Enrollment: " + newPax + " students");
+        ui.showMessage("Successfully updated module:");
+        ui.showMessage(moduleName + " | Enrollment: " + newPax + " students");
 
         // 3. Save the updated list to the local text file.
         try {
             storage.saveModules(moduleList);
         } catch (EquipmentMasterException e) {
-            System.out.println(e.getMessage());
+            ui.showMessage(e.getMessage());
         }
     }
 

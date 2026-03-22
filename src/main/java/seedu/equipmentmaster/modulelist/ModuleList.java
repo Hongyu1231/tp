@@ -21,9 +21,19 @@ public class ModuleList {
 
     /**
      * Adds a new module to the list.
+     * If a module with the same name (case-insensitive) already exists,
+     * the new module is not added to avoid ambiguous duplicates.
+     *
      * @param module The {@code Module} to be added.
      */
     public void addModule(Module module) {
+        if (module == null) {
+            return;
+        }
+        if (findModule(module.getName()) != null) {
+            // A module with this name already exists; do not add a duplicate.
+            return;
+        }
         modules.add(module);
     }
 
