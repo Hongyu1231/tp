@@ -4,6 +4,7 @@ import java.util.logging.LogManager;
 import seedu.equipmentmaster.commands.Command;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
+import seedu.equipmentmaster.modulelist.ModuleList;
 import seedu.equipmentmaster.parser.Parser;
 import seedu.equipmentmaster.semester.AcademicSemester;
 import seedu.equipmentmaster.storage.Storage;
@@ -18,16 +19,19 @@ public class EquipmentMaster {
     private static final Logger logger = Logger.getLogger(EquipmentMaster.class.getName());
     private Ui ui;
     private EquipmentList equipments;
+    private ModuleList moduleList;
 
     /**
      * Initializes the application, loads system settings, and populates the equipment list.
      *
-     * @param filePath The path to the equipment data file.
+     * @param equipmentFilePath The relative path to the data.txt storage file.
+     * @param settingFilePath The relative path to the setting.txt storage file.
+     * @param moduleFilePath The relative path to the module.txt storage file.
      */
-    public EquipmentMaster(String filePath) {
+    public EquipmentMaster(String equipmentFilePath, String settingFilePath, String moduleFilePath) {
         logger.log(Level.INFO, "Starting EquipmentMaster initialization...");
         this.ui = new Ui();
-        EquipmentMaster.storage = new Storage(filePath, ui);
+        EquipmentMaster.storage = new Storage(equipmentFilePath, ui, settingFilePath, moduleFilePath);
 
         // Load the system time from settings.txt during startup
         try {
@@ -45,6 +49,8 @@ public class EquipmentMaster {
         // Load equipment data
         this.equipments = new EquipmentList(storage.load());
         logger.log(Level.INFO, "System time loaded successfully.");
+
+        this.moduleList = storage.loadModules();
 
         // Check loaded commands
         logger.log(Level.INFO, "Loaded "+Parser.getCommandSpecs().size()+" commands.");
@@ -77,7 +83,7 @@ public class EquipmentMaster {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
                 Command c = Parser.parse(fullCommand);
-                c.execute(equipments, ui, storage);
+                c.execute(equipments, moduleList, ui, storage);
                 isExit = c.isExit();
             } catch (EquipmentMasterException e) {
                 ui.showMessage(e.getMessage());
@@ -89,7 +95,7 @@ public class EquipmentMaster {
 
     public static void main(String[] args) throws EquipmentMasterException{
         LogManager.getLogManager().reset();
-        new EquipmentMaster("data/equipment.txt").run();
+        new EquipmentMaster("data/equipment.txt", "data/setting.txt", "data/module.txt").run();
     }
 
     public EquipmentList getEquipmentList() {

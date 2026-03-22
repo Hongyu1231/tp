@@ -3,6 +3,7 @@ package seedu.equipmentmaster.commands;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
+import seedu.equipmentmaster.modulelist.ModuleList;
 import seedu.equipmentmaster.parser.Parser;
 import seedu.equipmentmaster.storage.Storage;
 import seedu.equipmentmaster.ui.Ui;
@@ -22,14 +23,15 @@ class HelpCommandTest {
     @BeforeEach
     public void setUp() {
         ui = new Ui(System.in, new PrintStream(outputStreamCaptor));
-        storage = new Storage("dummy/path.txt", ui);
+        storage = new Storage("dummy/path.txt", ui, "dummy/settingPath.txt", "dummy/modulePath.txt");
         equipmentList = new EquipmentList();
     }
 
     @Test
     public void execute_helpCommand_displaysAllCommands() {
         HelpCommand helpCommand = new HelpCommand();
-        helpCommand.execute(equipmentList, ui, storage);
+        ModuleList moduleList = new ModuleList();
+        helpCommand.execute(equipmentList, moduleList, ui, storage);
 
         String output = outputStreamCaptor.toString();
 

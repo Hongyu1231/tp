@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import seedu.equipmentmaster.equipment.Equipment;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
+import seedu.equipmentmaster.modulelist.ModuleList;
 import seedu.equipmentmaster.storage.Storage;
 import seedu.equipmentmaster.ui.Ui;
 import seedu.equipmentmaster.semester.AcademicSemester;
@@ -63,8 +64,9 @@ public class ReportCommandTest {
 
     @Test
     public void execute_invalidReportType_showsError() {
+        ModuleList moduleList = new ModuleList();
         ReportCommand command = new ReportCommand("broken", "");
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         assertTrue(outContent.toString().contains("Invalid report type"));
     }
@@ -72,6 +74,7 @@ public class ReportCommandTest {
     @Test
     public void execute_agingReport_identifiesExpiredAndSkipsLegacy() throws EquipmentMasterException {
         AcademicSemester purchaseSem = new AcademicSemester("AY2024/25 Sem1");
+        ModuleList moduleList = new ModuleList();
 
         // 1. Expired Equipment (Lifespan: 2 years. Age in AY28/29 Sem1 will be 4 years) -> SHOULD BE REPORTED
         Equipment expiredEq = new Equipment("STM32", 10, 10, 0, purchaseSem, 2.0, 0);
@@ -87,7 +90,7 @@ public class ReportCommandTest {
 
         // Execute report using a future semester to simulate time passing
         ReportCommand command = new ReportCommand("aging", "AY2028/29 Sem1");
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         String output = outContent.toString();
 
@@ -107,6 +110,7 @@ public class ReportCommandTest {
     @Test
     public void execute_noExpiredEquipment_showsGreatNews() throws EquipmentMasterException {
         AcademicSemester purchaseSem = new AcademicSemester("AY2025/26 Sem1");
+        ModuleList moduleList = new ModuleList();
 
         // Add a brand new equipment with a 5-year lifespan
         Equipment newEq = new Equipment("3D Printer", 2, 2, 0, purchaseSem, 5.0, 0);
@@ -114,7 +118,7 @@ public class ReportCommandTest {
 
         // Check report in the SAME semester it was bought
         ReportCommand command = new ReportCommand("aging", "AY2025/26 Sem1");
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         String output = outContent.toString();
         assertTrue(output.contains("Great news! No equipment needs replacement"));
@@ -126,10 +130,11 @@ public class ReportCommandTest {
         // Simulate all 10 items being loaned out (Available = 0, Loaned = 10).
         Equipment ghost = new Equipment("Ghost", 10, 0, 10, null, 0.0, 10);
         equipments.addEquipment(ghost);
+        ModuleList moduleList = new ModuleList();
 
         // Act: Execute the 'report lowstock' command
         ReportCommand command = new ReportCommand("lowstock", "");
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         // Assert: Verify that the "RESTOCK NEEDED" alert is NOT triggered
         String output = outContent.toString();
@@ -142,10 +147,11 @@ public class ReportCommandTest {
         // Arrange: Set up an equipment item where Total = 10, but Min Threshold = 20.
         Equipment iron = new Equipment("Soldering Iron", 10, 10, 0, null, 0.0, 20);
         equipments.addEquipment(iron);
+        ModuleList moduleList = new ModuleList();
 
         // Act: Execute the 'report lowstock' command
         ReportCommand command = new ReportCommand("lowstock", "");
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         // Assert: Verify the exact output format matches expectations
         String output = outContent.toString();

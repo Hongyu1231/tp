@@ -4,6 +4,7 @@ package seedu.equipmentmaster.commands;
 import seedu.equipmentmaster.equipment.Equipment;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
+import seedu.equipmentmaster.modulelist.ModuleList;
 import seedu.equipmentmaster.semester.AcademicSemester;
 import seedu.equipmentmaster.storage.Storage;
 import seedu.equipmentmaster.ui.Ui;
@@ -220,7 +221,7 @@ public class AddCommand extends Command {
      * and displaying a message to the user.
      */
     @Override
-    public void execute(EquipmentList equipments, Ui ui, Storage storage) {
+    public void execute(EquipmentList equipments, ModuleList moduleList, Ui ui, Storage storage) {
         assert equipments != null : "EquipmentList dependency cannot be null";
         assert ui != null : "Ui dependency cannot be null";
         assert storage != null : "Storage dependency cannot be null";

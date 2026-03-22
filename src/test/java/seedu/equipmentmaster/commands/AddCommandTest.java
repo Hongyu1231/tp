@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import seedu.equipmentmaster.equipment.Equipment;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
+import seedu.equipmentmaster.modulelist.ModuleList;
 import seedu.equipmentmaster.semester.AcademicSemester;
 import seedu.equipmentmaster.storage.Storage;
 import seedu.equipmentmaster.ui.Ui;
@@ -19,19 +20,22 @@ import java.util.Arrays;
 
 public class AddCommandTest {
     private static final String TEST_FILE_PATH = "test_equipment.txt";
+    private static final String TEST_SETTING_FILE_PATH = "test_setting.txt";
+    private static final String TEST_MODULE_FILE_PATH = "test_module.txt";
 
     @Test
     public void execute_validEquipment_addsToList() throws EquipmentMasterException {
         // Arrange
         EquipmentList equipments = new EquipmentList();
         Ui ui = new Ui();
-        Storage storage = new Storage(TEST_FILE_PATH, ui);
+        Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
+        ModuleList moduleList = new ModuleList();
 
         // Test basic add (no modules, no semester/lifespan)
         AddCommand command = new AddCommand("STM32", 5);
 
         // Act
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         // Assert
         assertEquals(1, equipments.getSize());
@@ -49,7 +53,8 @@ public class AddCommandTest {
 
         EquipmentList equipments = new EquipmentList();
         Ui ui = new Ui();
-        Storage storage = new Storage(TEST_FILE_PATH, ui);
+        Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
+        ModuleList moduleList = new ModuleList();
 
         // 1. Create dummy data for your new fields
         AcademicSemester testSem = new AcademicSemester("AY2023/24 Sem1");
@@ -59,7 +64,7 @@ public class AddCommandTest {
         AddCommand command = new AddCommand("STM32", 5, testSem, testLifespan, 0,
                 new ArrayList<>());
 
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         // Assert
         assertEquals(1, equipments.getSize());
@@ -77,7 +82,8 @@ public class AddCommandTest {
         // Arrange
         EquipmentList equipments = new EquipmentList();
         Ui ui = new Ui();
-        Storage storage = new Storage(TEST_FILE_PATH, ui);
+        Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
+        ModuleList moduleList = new ModuleList();
 
         ArrayList<String> modules = new ArrayList<>();
         modules.add("EE2026");
@@ -86,7 +92,7 @@ public class AddCommandTest {
         AddCommand command = new AddCommand("FPGA", 40, modules);
 
         // Act
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         // Assert
         assertEquals(1, equipments.getSize());
@@ -106,7 +112,8 @@ public class AddCommandTest {
         // Arrange
         EquipmentList equipments = new EquipmentList();
         Ui ui = new Ui();
-        Storage storage = new Storage(TEST_FILE_PATH, ui);
+        Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
+        ModuleList moduleList = new ModuleList();
 
         AcademicSemester testSem = new AcademicSemester("AY2023/24 Sem1");
         double testLifespan = 5.5;
@@ -117,7 +124,7 @@ public class AddCommandTest {
         AddCommand command = new AddCommand("FPGA", 40, testSem, testLifespan, 0, modules);
 
         // Act
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         // Assert
         assertEquals(1, equipments.getSize());
@@ -135,13 +142,14 @@ public class AddCommandTest {
     @Test
     public void execute_addAtMinThreshold_showsLowStockAlert() {
         EquipmentList equipments = new EquipmentList();
+        ModuleList moduleList = new ModuleList();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Ui ui = new Ui(System.in, new PrintStream(outputStream));
-        Storage storage = new Storage(TEST_FILE_PATH, ui);
+        Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
 
         AddCommand command = new AddCommand("Resistor", 5, null, 0.0, 5, new ArrayList<>());
 
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         String output = outputStream.toString();
         assertTrue(output.contains("!!! LOW STOCK ALERT: Resistor"));
@@ -150,13 +158,14 @@ public class AddCommandTest {
     @Test
     public void execute_addAboveMinThreshold_noLowStockAlert() {
         EquipmentList equipments = new EquipmentList();
+        ModuleList moduleList = new ModuleList();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Ui ui = new Ui(System.in, new PrintStream(outputStream));
-        Storage storage = new Storage(TEST_FILE_PATH, ui);
+        Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
 
         AddCommand command = new AddCommand("Resistor", 10, null, 0.0, 5, new ArrayList<>());
 
-        command.execute(equipments, ui, storage);
+        command.execute(equipments, moduleList, ui, storage);
 
         String output = outputStream.toString();
         assertTrue(!output.contains("!!! LOW STOCK ALERT:"));
