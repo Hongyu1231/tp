@@ -53,10 +53,12 @@ public class Equipment {
      * @param purchaseSem   The academic semester when the equipment was purchased.
      * @param lifespanYears The expected lifespan in years.
      * @param moduleCodes   List of module codes associated with this equipment.
+     * @param minQuantity   Minimum stock threshold.
+     * @param bufferPercentage Safety buffer percentage for procurement.
      */
     public Equipment(String name, int quantity, int available, int loaned,
                      AcademicSemester purchaseSem, double lifespanYears,
-                     ArrayList<String> moduleCodes, int minQuantity,double  bufferPercentage) {
+                     ArrayList<String> moduleCodes, int minQuantity, double bufferPercentage) {
         this.name = name;
         this.quantity = quantity;
         this.available = available;
