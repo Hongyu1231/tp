@@ -1,5 +1,6 @@
 package seedu.equipmentmaster.commands;
 
+import seedu.equipmentmaster.context.Context;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
 import seedu.equipmentmaster.modulelist.ModuleList;
@@ -42,18 +43,21 @@ public class SetSemCommand extends Command {
     }
 
     /**
-     * Executes the command to update the global system semester.
-     * @param equipments The list of equipment (not used in this command).
-     * @param ui The user interface to display messages.
-     * @param storage The storage handler used to persist the updated semester.
+     * Executes the set semester command.
+     * Updates the global system academic semester in the context and saves the new setting to the settings file.
+     *
+     * @param context The application context containing the global semester state, UI, and storage.
      */
     @Override
-    public void execute(EquipmentList equipments, ModuleList moduleList, Ui ui, Storage storage) {
+    public void execute(Context context) {
+        Storage storage = context.getStorage();
+        Ui ui = context.getUi();
+
         try {
             // Assertion: Parser should have already verified that rawSem is not null.
             assert rawSem != null : "Semester string in SetSemCommand should not be null";
             AcademicSemester newSem = new AcademicSemester(rawSem);
-            EquipmentMaster.setCurrentSemester(newSem);
+            context.setCurrentSemester(newSem);
             storage.saveSettings(newSem);
             ui.showMessage("System time updated. Current academic semester is now set to " + newSem);
         } catch (EquipmentMasterException e) {

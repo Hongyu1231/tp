@@ -35,7 +35,7 @@ public class AddCommandTest {
         AddCommand command = new AddCommand("STM32", 5);
 
         // Act
-        command.execute(equipments, moduleList, ui, storage);
+        command.execute(context);
 
         // Assert
         assertEquals(1, equipments.getSize());

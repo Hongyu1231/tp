@@ -1,10 +1,9 @@
 package seedu.equipmentmaster.commands;
 
+import seedu.equipmentmaster.context.Context;
 import seedu.equipmentmaster.equipment.Equipment;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
-import seedu.equipmentmaster.modulelist.ModuleList;
-import seedu.equipmentmaster.storage.Storage;
 import seedu.equipmentmaster.ui.Ui;
 
 import java.util.ArrayList;
@@ -91,13 +90,16 @@ public class FindCommand extends Command {
     }
 
     /**
-     * Iterates through the equipment list to find matches and displays them.
-     * @param equipments The current list of equipment to search through.
-     * @param ui         The user interface to handle printing the results.
-     * @param storage    The storage utility.
+     * Executes the find command.
+     * Searches the equipment list for items whose names or module codes match the keyword and displays them.
+     *
+     * @param context The application context containing the equipment list and UI.
      */
     @Override
-    public void execute(EquipmentList equipments, ModuleList moduleList, Ui ui, Storage storage) {
+    public void execute(Context context) {
+        EquipmentList equipments = context.getEquipments();
+        Ui ui = context.getUi();
+
         if (equipments.isEmpty()) {
             ui.showMessage("There is no equipment in your list.");
             return;
