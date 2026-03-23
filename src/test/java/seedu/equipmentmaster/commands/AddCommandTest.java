@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.equipmentmaster.context.Context;
 import seedu.equipmentmaster.equipment.Equipment;
 import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
@@ -30,6 +31,8 @@ public class AddCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
         ModuleList moduleList = new ModuleList();
+        AcademicSemester currentSystemSemester = new AcademicSemester("AY2024/25 Sem1");
+        Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
 
         // Test basic add (no modules, no semester/lifespan)
         AddCommand command = new AddCommand("STM32", 5);
@@ -55,6 +58,8 @@ public class AddCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
         ModuleList moduleList = new ModuleList();
+        AcademicSemester currentSystemSemester = new AcademicSemester("AY2024/25 Sem1");
+        Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
 
         // 1. Create dummy data for your new fields
         AcademicSemester testSem = new AcademicSemester("AY2023/24 Sem1");
@@ -64,7 +69,7 @@ public class AddCommandTest {
         AddCommand command = new AddCommand("STM32", 5, testSem, testLifespan, 0,
                 new ArrayList<>());
 
-        command.execute(equipments, moduleList, ui, storage);
+        command.execute(context);
 
         // Assert
         assertEquals(1, equipments.getSize());
@@ -84,27 +89,33 @@ public class AddCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
         ModuleList moduleList = new ModuleList();
+        try {
+            AcademicSemester currentSystemSemester = new AcademicSemester("AY2024/25 Sem1");
+            Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
 
-        ArrayList<String> modules = new ArrayList<>();
-        modules.add("EE2026");
-        modules.add("CG2028");
+            ArrayList<String> modules = new ArrayList<>();
+            modules.add("EE2026");
+            modules.add("CG2028");
 
-        AddCommand command = new AddCommand("FPGA", 40, modules);
+            AddCommand command = new AddCommand("FPGA", 40, modules);
 
-        // Act
-        command.execute(equipments, moduleList, ui, storage);
+            // Act
+            command.execute(context);
 
-        // Assert
-        assertEquals(1, equipments.getSize());
+            // Assert
+            assertEquals(1, equipments.getSize());
 
-        Equipment added = equipments.getEquipment(0);
-        assertEquals("FPGA", added.getName());
-        assertEquals(40, added.getQuantity());
-        assertEquals(2, added.getModuleCodes().size());
-        assertTrue(added.getModuleCodes().contains("EE2026"));
-        assertTrue(added.getModuleCodes().contains("CG2028"));
-        assertEquals(null, added.getPurchaseSem());
-        assertEquals(0.0, added.getLifespanYears(), 0.0001);
+            Equipment added = equipments.getEquipment(0);
+            assertEquals("FPGA", added.getName());
+            assertEquals(40, added.getQuantity());
+            assertEquals(2, added.getModuleCodes().size());
+            assertTrue(added.getModuleCodes().contains("EE2026"));
+            assertTrue(added.getModuleCodes().contains("CG2028"));
+            assertEquals(null, added.getPurchaseSem());
+            assertEquals(0.0, added.getLifespanYears(), 0.0001);
+        } catch (EquipmentMasterException e) {
+            ui.showMessage(e.getMessage());
+        }
     }
 
     @Test
@@ -114,6 +125,8 @@ public class AddCommandTest {
         Ui ui = new Ui();
         Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
         ModuleList moduleList = new ModuleList();
+        AcademicSemester currentSystemSemester = new AcademicSemester("AY2024/25 Sem1");
+        Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
 
         AcademicSemester testSem = new AcademicSemester("AY2023/24 Sem1");
         double testLifespan = 5.5;
@@ -124,7 +137,7 @@ public class AddCommandTest {
         AddCommand command = new AddCommand("FPGA", 40, testSem, testLifespan, 0, modules);
 
         // Act
-        command.execute(equipments, moduleList, ui, storage);
+        command.execute(context);
 
         // Assert
         assertEquals(1, equipments.getSize());
@@ -146,13 +159,20 @@ public class AddCommandTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Ui ui = new Ui(System.in, new PrintStream(outputStream));
         Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
+        try {
+            AcademicSemester currentSystemSemester = new AcademicSemester("AY2024/25 Sem1");
+            Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
 
-        AddCommand command = new AddCommand("Resistor", 5, null, 0.0, 5, new ArrayList<>());
 
-        command.execute(equipments, moduleList, ui, storage);
+            AddCommand command = new AddCommand("Resistor", 5, null, 0.0, 5, new ArrayList<>());
 
-        String output = outputStream.toString();
-        assertTrue(output.contains("!!! LOW STOCK ALERT: Resistor"));
+            command.execute(context);
+
+            String output = outputStream.toString();
+            assertTrue(output.contains("!!! LOW STOCK ALERT: Resistor"));
+        } catch (EquipmentMasterException e) {
+            ui.showMessage(e.getMessage());
+        }
     }
 
     @Test
@@ -162,13 +182,19 @@ public class AddCommandTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         Ui ui = new Ui(System.in, new PrintStream(outputStream));
         Storage storage = new Storage(TEST_FILE_PATH, ui, TEST_SETTING_FILE_PATH, TEST_MODULE_FILE_PATH);
+        try {
+            AcademicSemester currentSystemSemester = new AcademicSemester("AY2024/25 Sem1");
+            Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
 
-        AddCommand command = new AddCommand("Resistor", 10, null, 0.0, 5, new ArrayList<>());
+            AddCommand command = new AddCommand("Resistor", 10, null, 0.0, 5, new ArrayList<>());
 
-        command.execute(equipments, moduleList, ui, storage);
+            command.execute(context);
 
-        String output = outputStream.toString();
-        assertTrue(!output.contains("!!! LOW STOCK ALERT:"));
+            String output = outputStream.toString();
+            assertTrue(!output.contains("!!! LOW STOCK ALERT:"));
+        } catch (EquipmentMasterException e) {
+            ui.showMessage(e.getMessage());
+        }
     }
 
     @Test

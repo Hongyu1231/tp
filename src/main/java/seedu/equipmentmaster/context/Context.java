@@ -27,7 +27,8 @@ public class Context {
      * @param storage         The storage component handling file read/write operations.
      * @param currentSemester The current academic semester of the system.
      */
-    public Context(EquipmentList equipments, ModuleList moduleList, Ui ui, Storage storage, AcademicSemester currentSemester) {
+    public Context(EquipmentList equipments, ModuleList moduleList, Ui ui,
+                   Storage storage, AcademicSemester currentSemester) {
         this.equipments = equipments;
         this.moduleList = moduleList;
         this.ui = ui;

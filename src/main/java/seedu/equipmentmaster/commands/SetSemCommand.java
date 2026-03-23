@@ -1,13 +1,10 @@
 package seedu.equipmentmaster.commands;
 
 import seedu.equipmentmaster.context.Context;
-import seedu.equipmentmaster.equipmentlist.EquipmentList;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
-import seedu.equipmentmaster.modulelist.ModuleList;
 import seedu.equipmentmaster.storage.Storage;
 import seedu.equipmentmaster.ui.Ui;
 import seedu.equipmentmaster.semester.AcademicSemester;
-import seedu.equipmentmaster.EquipmentMaster;
 
 /**
  * Command to update the global academic semester of the application.

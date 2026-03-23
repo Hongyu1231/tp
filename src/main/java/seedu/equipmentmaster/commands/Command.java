@@ -1,6 +1,5 @@
 package seedu.equipmentmaster.commands;
 
-
 import seedu.equipmentmaster.context.Context;
 import seedu.equipmentmaster.exception.EquipmentMasterException;
 
@@ -15,7 +14,7 @@ public abstract class Command {
      * Executes the command using the provided application context.
      *
      * @param context The {@code Context} object containing all necessary global states
-     * (e.g., equipment list, module list, UI, storage, and current semester).
+     *     (e.g., equipment list, module list, UI, storage, and current semester).
      * @throws EquipmentMasterException If an error specific to the command's execution occurs.
      */
     public abstract void execute(Context context) throws EquipmentMasterException;
