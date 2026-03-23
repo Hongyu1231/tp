@@ -1,6 +1,7 @@
 package seedu.equipmentmaster.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,7 +73,7 @@ public class SetStatusCommandTest {
             assertEquals(40, eq.getAvailable());
             assertEquals(0, eq.getLoaned());
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 
@@ -113,7 +114,7 @@ public class SetStatusCommandTest {
             assertEquals(30, eq.getAvailable());
             assertEquals(10, eq.getLoaned());
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 }

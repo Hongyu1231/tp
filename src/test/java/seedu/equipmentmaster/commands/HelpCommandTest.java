@@ -15,6 +15,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class HelpCommandTest {
 
@@ -34,10 +35,9 @@ class HelpCommandTest {
     public void execute_helpCommand_displaysAllCommands() {
         HelpCommand helpCommand = new HelpCommand();
         ModuleList moduleList = new ModuleList();
-        EquipmentList equipments = new EquipmentList();
         try {
             AcademicSemester currentSystemSemester = new AcademicSemester("AY2024/25 Sem1");
-            Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
+            Context context = new Context(equipmentList, moduleList, ui, storage, currentSystemSemester);
             helpCommand.execute(context);
 
             String output = outputStreamCaptor.toString();
@@ -55,7 +55,7 @@ class HelpCommandTest {
                         + spec.getFormat());
             }
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 }

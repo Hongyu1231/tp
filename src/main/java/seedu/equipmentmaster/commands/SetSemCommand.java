@@ -52,7 +52,10 @@ public class SetSemCommand extends Command {
 
         try {
             // Assertion: Parser should have already verified that rawSem is not null.
-            assert rawSem != null : "Semester string in SetSemCommand should not be null";
+            if (rawSem == null || rawSem.trim().isEmpty()) {
+                throw new EquipmentMasterException(
+                        "Please specify a semester. Usage: setsem AY[YYYY]/[YY] Sem[1/2]");
+            }
             AcademicSemester newSem = new AcademicSemester(rawSem);
             context.setCurrentSemester(newSem);
             storage.saveSettings(newSem);

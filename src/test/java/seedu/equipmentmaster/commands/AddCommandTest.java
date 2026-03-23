@@ -1,8 +1,5 @@
 package seedu.equipmentmaster.commands;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.Test;
 
 import seedu.equipmentmaster.context.Context;
@@ -18,6 +15,10 @@ import java.util.ArrayList;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AddCommandTest {
     private static final String TEST_FILE_PATH = "test_equipment.txt";
@@ -114,7 +115,7 @@ public class AddCommandTest {
             assertEquals(null, added.getPurchaseSem());
             assertEquals(0.0, added.getLifespanYears(), 0.0001);
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 
@@ -171,7 +172,7 @@ public class AddCommandTest {
             String output = outputStream.toString();
             assertTrue(output.contains("!!! LOW STOCK ALERT: Resistor"));
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 
@@ -193,7 +194,7 @@ public class AddCommandTest {
             String output = outputStream.toString();
             assertTrue(!output.contains("!!! LOW STOCK ALERT:"));
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 

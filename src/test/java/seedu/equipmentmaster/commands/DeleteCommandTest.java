@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -122,7 +123,7 @@ public class DeleteCommandTest {
             Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
             assertThrows(EquipmentMasterException.class, () -> command.execute(context));
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 
@@ -142,7 +143,7 @@ public class DeleteCommandTest {
             Context context = new Context(equipments, moduleList, ui, storage, currentSystemSemester);
             assertThrows(EquipmentMasterException.class, () -> command.execute(context));
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 
@@ -212,7 +213,7 @@ public class DeleteCommandTest {
                 command.execute(context);
             });
         } catch (EquipmentMasterException e) {
-            ui.showMessage(e.getMessage());
+            fail("Test setup failed unexpectedly: " + e.getMessage());
         }
     }
 

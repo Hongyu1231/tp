@@ -21,8 +21,8 @@ public class HelpCommand extends Command {
     }
 
     /**
-     * Executes the command.
-     * Displays the appropriate system message (help guide or exit farewell) to the user.
+     * Executes the help command.
+     * Displays a help message listing all available commands and their usage formats to the user.
      *
      * @param context The application context containing the UI.
      */
