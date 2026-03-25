@@ -13,7 +13,9 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,22 +31,24 @@ public class Storage {
 
     /**
      * Constructor.
+     *
      * @param equipmentFilePath The relative path to the data.txt storage file.
-     * @param settingFilePath The relative path to the setting.txt storage file.
-     * @param moduleFilePath The relative path to the module.txt storage file.
+     * @param settingFilePath   The relative path to the setting.txt storage file.
+     * @param moduleFilePath    The relative path to the module.txt storage file.
      */
     public Storage(String equipmentFilePath, Ui ui, String settingFilePath, String moduleFilePath) {
         this.equipmentFilePath = equipmentFilePath;
         this.ui = ui;
         this.settingFilePath = settingFilePath;
-        this. moduleFilePath = moduleFilePath;
+        this.moduleFilePath = moduleFilePath;
     }
 
     /**
      * Saves the current list of equipment to the .txt file.
+     *
      * @param equipments The current list of equipment.
      */
-    public void save(ArrayList<Equipment> equipments){
+    public void save(ArrayList<Equipment> equipments) {
         try {
             File file = new File(equipmentFilePath);
             File directory = file.getParentFile();
@@ -64,6 +68,7 @@ public class Storage {
 
     /**
      * Loads the equipment list stored in the .txt file.
+     *
      * @return The list of equipment from the file. Returns an empty list if the file is not found.
      */
     public ArrayList<Equipment> load() {
@@ -90,6 +95,7 @@ public class Storage {
 
     /**
      * Converts a formatted string from the .txt file into an Equipment object.
+     *
      * @param line A single line of text from the save file.
      * @return An Equipment object, or null if the string format is corrupted.
      */
@@ -154,6 +160,7 @@ public class Storage {
 
     /**
      * Saves the current system semester to the settings file.
+     *
      * @param currentSem The semester to be saved.
      */
     public void saveSettings(AcademicSemester currentSem) {
@@ -177,6 +184,7 @@ public class Storage {
 
     /**
      * Loads the system semester from the settings file.
+     *
      * @return The saved semester as a String, or a default value if not found.
      */
     public String loadSettings() {
@@ -211,7 +219,20 @@ public class Storage {
         }
         try (FileWriter fw = new FileWriter(file)) {
             for (Module m : moduleList.getModules()) {
-                fw.write(m.getName() + " | " + m.getPax() + System.lineSeparator());
+                StringBuilder reqsBuilder = new StringBuilder();
+                HashMap<String, Double> reqs = m.getEquipmentRequirements();
+
+                if (reqs != null && !reqs.isEmpty()) {
+                    TreeMap<String, Double> sortedReqs = new TreeMap<>(reqs);
+                    for (String eqName : sortedReqs.keySet()) {
+                        reqsBuilder.append(eqName).append("=").append(reqs.get(eqName)).append(",");
+                    }
+                    reqsBuilder.setLength(reqsBuilder.length() - 1);
+                    fw.write(m.getName() + " | " + m.getPax() + " | " +
+                            reqsBuilder.toString() + System.lineSeparator());
+                } else {
+                    fw.write(m.getName() + " | " + m.getPax() + System.lineSeparator());
+                }
             }
         } catch (IOException e) {
             throw new EquipmentMasterException("Error saving modules to file: " + moduleFilePath
@@ -244,7 +265,7 @@ public class Storage {
             }
 
             // Read and parse the data
-            try (Scanner scanner = new Scanner(file);){
+            try (Scanner scanner = new Scanner(file);) {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
 
@@ -252,15 +273,40 @@ public class Storage {
                         continue;
                     }
 
-                    String[] parts = line.split(" \\| ");
+                    String[] parts = line.split(" \\| ", 3);
 
-                    if (parts.length == 2) {
+                    if (parts.length >= 2) {
                         String name = parts[0].trim();
                         int pax = Integer.parseInt(parts[1].trim());
 
                         try {
+                            Module newModule = new Module(name, pax);
+                            //Check if there is a 3rd part containing equipment tags
+                            if (parts.length == 3 && !parts[2].trim().isEmpty()) {
+                                String[] requirements = parts[2].split(",");
+                                for (String req : requirements) {
+                                    String[] pair = req.split("=");
+                                    if (pair.length == 2) {
+                                        String eqName = pair[0].trim();
+                                        try {
+                                            double ratio = Double.parseDouble(pair[1].trim());
+                                            if (ratio <= 0) {
+                                                ui.showMessage("Skipping invalid equipment ratio (" + ratio
+                                                        + ") for equipment '" + eqName
+                                                        + "' in module '" + name + "'.");
+                                                continue;
+                                            }
+                                            newModule.addEquipmentRequirement(eqName, ratio);
+                                        } catch (NumberFormatException | EquipmentMasterException e) {
+                                            ui.showMessage("Skipping invalid equipment requirement '"
+                                                    + req.trim() + "' for module '" + name + "': "
+                                                    + e.getMessage());
+                                        }
+                                    }
+                                }
+                            }
                             // Add the reconstructed module to the list
-                            loadedList.addModule(new Module(name, pax));
+                            loadedList.addModule(newModule);
                         } catch (EquipmentMasterException e) {
                             ui.showMessage(e.getMessage());
                         }

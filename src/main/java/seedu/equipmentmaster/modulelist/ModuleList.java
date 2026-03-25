@@ -91,4 +91,20 @@ public class ModuleList {
     public ArrayList<Module> getModules() {
         return modules;
     }
+
+    public boolean hasModule(String moduleName) {
+        // Reuses findModule so we guarantee the exact same search logic!
+        return findModule(moduleName) != null;
+    }
+
+    /**
+     * Retrieves a module from the list by its name (case-insensitive).
+     *
+     * @param moduleName The name of the module to find.
+     * @return The Module object if found, or null if it doesn't exist.
+     */
+    public Module getModule(String moduleName) {
+        // Wraps your private helper method so external commands can use it
+        return findModule(moduleName);
+    }
 }

@@ -121,4 +121,13 @@ public class EquipmentList {
     public void removeEquipment(Equipment equipment) {
         equipments.remove(equipment);
     }
+
+    /**
+     * Checks if equipment exists in the list by its name.
+     *
+     * @param equipmentName Name of the equipment to be checked
+     */
+    public boolean hasEquipment(String equipmentName) {
+        return findByName(equipmentName) != null;
+    }
 }

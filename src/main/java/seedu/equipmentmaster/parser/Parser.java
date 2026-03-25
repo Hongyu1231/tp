@@ -12,6 +12,8 @@ import seedu.equipmentmaster.commands.DeleteCommand;
 import seedu.equipmentmaster.commands.HelpCommand;
 import seedu.equipmentmaster.commands.SetMinCommand;
 import seedu.equipmentmaster.commands.AddModCommand;
+import seedu.equipmentmaster.commands.TagCommand;
+import seedu.equipmentmaster.commands.UntagCommand;
 import seedu.equipmentmaster.commands.UpdateModCommand;
 import seedu.equipmentmaster.commands.DelModCommand;
 import seedu.equipmentmaster.commands.ListModCommand;
@@ -60,6 +62,10 @@ public class Parser {
         commandSpecs.add(new CommandSpec("listmod", "listmod", fullCommand -> new ListModCommand()));
         commandSpecs.add(new CommandSpec("setbuffer", "setbuffer n/NAME b/PERCENTAGE",
                 SetBufferCommand::parse));
+        commandSpecs.add(new CommandSpec("tag", "tag m/MOD_NAME n/EQ_NAME req/FRACTION",
+                TagCommand::parse));
+        commandSpecs.add(new CommandSpec("untag", "untag m/MOD_NAME n/EQ_NAME",
+                UntagCommand::parse));
     }
 
     /**
@@ -134,6 +140,35 @@ public class Parser {
 
         public CommandFactory getCreator() {
             return creator;
+        }
+
+        /**
+         * Safely extracts an argument from a command string based on a prefix.
+         * @param fullCommand The raw user input.
+         * @param prefix The specific prefix to extract (e.g., "n/").
+         * @param allPrefixes An array of all possible prefixes for this command (e.g., {" m/", " n/", " req/"}).
+         * @return The extracted string, or an empty string if not found.
+         */
+        public static String extractArgument(String fullCommand, String prefix, String[] allPrefixes) {
+            String paddedCommand = " " + fullCommand.trim() + " ";
+            String searchPrefix = " " + prefix;
+            int startIdx = paddedCommand.indexOf(searchPrefix);
+
+            if (startIdx == -1) {
+                return "";
+            }
+
+            startIdx += searchPrefix.length();
+            int endIdx = paddedCommand.length();
+
+            // Find the nearest NEXT prefix to know where to stop extracting
+            for (String p : allPrefixes) {
+                int pIdx = paddedCommand.indexOf(p, startIdx);
+                if (pIdx != -1 && pIdx < endIdx) {
+                    endIdx = pIdx;
+                }
+            }
+            return paddedCommand.substring(startIdx, endIdx).trim();
         }
 
 
