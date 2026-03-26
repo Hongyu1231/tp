@@ -42,11 +42,17 @@ public class SetBufferCommand extends Command {
      * @param percentage Buffer percentage to set.
      */
     public SetBufferCommand(int index, double percentage) {
+        if (index <= 0) {
+            throw new IllegalArgumentException("Index must be positive. Received: " + index);
+        }
+
+        if (percentage < 0) {
+            throw new IllegalArgumentException("Buffer percentage cannot be negative.");
+        }
+
         this.name = null;
         this.index = index;
         this.percentage = percentage;
-        assert percentage >= 0 : "Buffer percentage should be non-negative";
-        assert index > 0 : "Index should be positive";
     }
 
     /**
