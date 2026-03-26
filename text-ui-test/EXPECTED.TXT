@@ -26,8 +26,9 @@ Here are the available commands:
 14. delmod    | delmod n/NAME
 15. listmod   | listmod
 16. setbuffer | setbuffer n/NAME b/PERCENTAGE
-17. tag       | tag m/MOD_NAME n/EQ_NAME req/FRACTION
-18. untag     | untag m/MOD_NAME n/EQ_NAME
+17. setbuffer | setbuffer i/INDEX b/PERCENTAGE
+18. tag       | tag m/MOD_NAME n/EQ_NAME req/FRACTION
+19. untag     | untag m/MOD_NAME n/EQ_NAME
 ===================================================
 ===================================================
 Here are the available commands:
@@ -48,8 +49,9 @@ Here are the available commands:
 14. delmod    | delmod n/NAME
 15. listmod   | listmod
 16. setbuffer | setbuffer n/NAME b/PERCENTAGE
-17. tag       | tag m/MOD_NAME n/EQ_NAME req/FRACTION
-18. untag     | untag m/MOD_NAME n/EQ_NAME
+17. setbuffer | setbuffer i/INDEX b/PERCENTAGE
+18. tag       | tag m/MOD_NAME n/EQ_NAME req/FRACTION
+19. untag     | untag m/MOD_NAME n/EQ_NAME
 ===================================================
 ===================================================
 The current system time is: AY2024/25 Sem1
@@ -279,6 +281,22 @@ Example: setbuffer n/STM32 b/10
 Invalid command format!
 Usage: setbuffer n/NAME b/PERCENTAGE
 Example: setbuffer n/STM32 b/10
+===================================================
+===================================================
+Invalid command format!
+Usage: setbuffer n/NAME b/PERCENTAGE
+Example: setbuffer n/STM32 b/10
+===================================================
+===================================================
+Buffer Updated:
+Ghost | Safety Buffer: 15.0%
+===================================================
+===================================================
+Buffer Updated:
+Resistor | Safety Buffer: 25.5%
+===================================================
+===================================================
+Buffer percentage cannot be negative.
 ===================================================
 ===================================================
 Here are the current course modules in your system:
